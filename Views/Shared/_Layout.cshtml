@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KevDevTools</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KevDevTools.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/mdb_lib/mdb.min.css" asp-append-version="true" />
@@ -12,26 +13,181 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KevDevTools</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+<!-- Sidenav -->
+<nav
+  data-mdb-sidenav-init
+  id="full-screen-example"
+  class="sidenav bg-light"
+  data-mdb-color="dark"
+  data-mdb-mode="side"
+  data-mdb-hidden="false"
+  data-mdb-scroll-container="#scrollContainer"
+>
+  <div class="mt-4">
+    <div id="header-content" class="ps-3">
+      <img
+        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(23).webp"
+        alt="Avatar"
+        class="rounded-circle img-fluid mb-3"
+        style="max-width: 50px;"
+      />
+
+      <h4>
+        <span style="white-space: nowrap;">Ann Smith</span>
+      </h4>
+      <p>ann_s@mdbootstrap.com</p>
+    </div>
+    <hr class="mb-0" />
+  </div>
+  <div id="scrollContainer">
+    <ul class="sidenav-menu">
+      <li class="sidenav-item">
+        <a class="sidenav-link" href="/">
+          <i class="fas fa-envelope fa-fw me-3"></i>Inbox</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-paper-plane fa-fw me-3"></i>Outbox</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-address-book fa-fw me-3"></i>Contacts</a
+        >
+        <ul class="sidenav-collapse">
+          <li class="sidenav-item">
+            <a class="sidenav-link">Family</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link" href="/previews/mdb-ui-kit/sidenav/2.html">Friends</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link">Work</a>
+          </li>
+        </ul>
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-file fa-fw me-3"></i>Drafts</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-heart fa-fw me-3"></i>Favourites</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-star fa-fw me-3"></i>Starred</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-trash fa-fw me-3"></i>Trash</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-ban fa-fw me-3"></i>Spam</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link"
+          ><i class="fas fa-tag fa-fw me-3"></i>Categories</a
+        >
+        <ul class="sidenav-collapse">
+          <li class="sidenav-item">
+            <a class="sidenav-link">Social</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link">Notifications</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link">Recent</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link">Uploads</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link">Backups</a>
+          </li>
+          <li class="sidenav-item">
+            <a class="sidenav-link">Offers</a>
+          </li>
+        </ul>
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-sticky-note fa-fw me-3"></i>Notes</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-user-circle fa-fw me-3"></i>Personal</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-ellipsis-h fa-fw me-3"></i>More</a
+        >
+      </li>
+    </ul>
+    <hr class="m-0" />
+    <ul class="sidenav-menu">
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-cogs fa-fw me-3"></i>Settings</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-user fa-fw me-3"></i>Profile</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-shield-alt fa-fw me-3"></i>Privacy</a
+        >
+      </li>
+      <li class="sidenav-item">
+        <a class="sidenav-link">
+          <i class="fas fa-user-astronaut fa-fw me-3"></i>Log out</a
+        >
+      </li>
+    </ul>
+  </div>
+</nav>
+<!-- Sidenav -->
+
+<!-- Content -->
+<div class="mdb-page-content text-center page-intro bg-light">
+  <div class="text-center py-5">
+    <button
+      data-mdb-ripple-init
+      id="toggler"
+      class="btn btn-dark mt-5"
+      data-mdb-toggle="sidenav"
+      data-mdb-target="#full-screen-example"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
             </div>
-        </nav>
+</div>
+<!-- Content -->
     </header>
+    <button data-mdb-ripple-init
+            id="toggler"
+            class="btn btn-dark mt-5"
+            data-mdb-toggle="sidenav"
+            data-mdb-target="#full-screen-example">
+        <i class="fas fa-bars"></i>
+    </button>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
