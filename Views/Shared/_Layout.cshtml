@@ -12,92 +12,33 @@
     <link rel="stylesheet" href="~/mdb_plugins/all.min.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-<!-- Sidenav -->
-<nav
-  data-mdb-sidenav-init
-  id="full-screen-example"
-  class="sidenav bg-light"
-  data-mdb-color="dark"
-  data-mdb-mode="side"
-  data-mdb-hidden="false"
-  data-mdb-scroll-container="#scrollContainer"
->
-  <div class="mt-4">
-    <div id="header-content" class="ps-3">
-      <h4>
-        <span style="white-space: nowrap;">KevDevTool</span>
-      </h4>
-      <p>info@kevin-johr.dev</p>
-    </div>
-    <hr class="mb-0" />
-  </div>
-  <div id="scrollContainer">
-    <ul class="sidenav-menu">
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="/">
-          <i class="fas fa-envelope fa-fw me-3"></i>Home</a
-        >
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link">
-          <i class="fas fa-address-book fa-fw me-3"></i>RabbitMQ</a
-        >
-        <ul class="sidenav-collapse">
-          <li class="sidenav-item">
-            <a class="sidenav-link">Test Tool</a>
-          </li>
-          <li class="sidenav-item">
-            <a class="sidenav-link">Documentation</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <hr class="m-0" />
-    <ul class="sidenav-menu">
-      <li class="sidenav-item">
-        <a class="sidenav-link">
-          <i class="fas fa-cogs fa-fw me-3"></i>Impressum</a
-        >
-      </li>
-    </ul>
-  </div>
-</nav>
-<!-- Sidenav -->
 
-<!-- Content -->
-<div class="mdb-page-content text-center page-intro bg-light">
-  <div class="text-center py-5">
-    <button
-      data-mdb-ripple-init
-      id="toggler"
-      class="btn btn-dark mt-5"
-      data-mdb-toggle="sidenav"
-      data-mdb-target="#full-screen-example"
-    >
-      <i class="fas fa-bars"></i>
-    </button>
-  </div>
+    <header>
+
+        <!-- Sidenav -->
+        <partial name="_Navigation" />
+        <!-- Sidenav -->
+
+        <!-- Content -->
+        <div class="mdb-page-content text-center page-intro bg-light">
+            <div class="text-center py-5">
+                <button data-mdb-ripple-init
+                        id="toggler"
+                        class="btn btn-dark mt-5"
+                        data-mdb-toggle="sidenav"
+                        data-mdb-target="#full-screen-example">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
             <div class="container">
                 <main role="main" class="pb-3">
                     @RenderBody()
                 </main>
             </div>
-</div>
-<!-- Content -->
+        </div>
+        <!-- Content -->
+
     </header>
-    <button data-mdb-ripple-init
-            id="toggler"
-            class="btn btn-dark mt-5"
-            data-mdb-toggle="sidenav"
-            data-mdb-target="#full-screen-example">
-        <i class="fas fa-bars"></i>
-    </button>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
