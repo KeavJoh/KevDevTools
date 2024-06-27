@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "RabbitMQ_Tool";
+    var rabbitObj = ViewBag.RabbitObj as KevDevTools.Models.RabbitMQ.RabbitMQ_ConnectionObj;
+}
+
+<h1>Set connection to RabbitMQ service</h1>
+<form asp-controller="RabbitMQ" asp-action="ConnectToRabbitService">
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" asp-for="@rabbitObj.HostName" required />
+                <label class="form-label">HostName</label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" asp-for="@rabbitObj.UserName" required />
+                <label class="form-label">UserName</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" asp-for="@rabbitObj.Password" required />
+                <label class="form-label">Password</label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" asp-for="@rabbitObj.VirtualHost" />
+                <label class="form-label">VirtualHost</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="number" class="form-control" asp-for="@rabbitObj.Port" required />
+                <label class="form-label">Port</label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" asp-for="@rabbitObj.QueueName" required />
+                <label class="form-label">QueName</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <select data-mdb-select-init asp-for="@rabbitObj.Durable">
+                <option value="0">False</option>
+                <option value="1">True</option>
+            </select>
+            <label class="form-label select-label">Durable</label>
+        </div>
+        <div class="col-6">
+            <select data-mdb-select-init asp-for="@rabbitObj.Exclusive">
+                <option value="0">False</option>
+                <option value="1">True</option>
+            </select>
+            <label class="form-label select-label">Exclusive</label>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <select data-mdb-select-init asp-for="@rabbitObj.AutoDelete">
+                <option value="0">False</option>
+                <option value="1">True</option>
+            </select>
+            <label class="form-label select-label">AutoDelete</label>
+        </div>
+        <div class="col-6">
+            <select data-mdb-select-init disabled>
+                <option value="0">False</option>
+                <option value="1">True</option>
+            </select>
+            <label class="form-label select-label">Arguments</label>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4" data-mdb-ripple-init>Connect</button>
+</form>
+
+@if(rabbitObj.Connected == false)
+{
+    <div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="danger">
+        Not connected
+    </div>
+} else
+{
+    <div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="success">
+        Connected
+    </div>
+}
