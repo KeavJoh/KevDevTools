@@ -19,26 +19,26 @@
         <partial name="_Navigation" />
         <!-- Sidenav -->
 
-        <!-- Content -->
-        <div class="mdb-page-content text-center page-intro bg-light">
-            <div class="text-center py-5">
-                <button data-mdb-ripple-init
-                        id="toggler"
-                        class="btn btn-dark mt-5"
-                        data-mdb-toggle="sidenav"
-                        data-mdb-target="#full-screen-example">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-            <div class="container">
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
-            </div>
-        </div>
-        <!-- Content -->
-
     </header>
+
+    <!-- Content -->
+    <div class="mdb-page-content text-center page-intro bg-light">
+        <div class="text-center py-5">
+            <button data-mdb-ripple-init
+                    id="toggler"
+                    class="btn btn-dark mt-5"
+                    data-mdb-toggle="sidenav"
+                    data-mdb-target="#full-screen-example">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <!-- Content -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
