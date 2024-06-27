@@ -5,13 +5,20 @@ using IConnection = RabbitMQ.Client.IConnection;
 
 namespace KevDevTools.Services
 {
-    public class RabbitMQService : IDisposable
+    public class RabbitMQService
     {
-        private IConnection _connection;
-        private IModel _channel;
+        private readonly Dictionary<string, IConnection> _connections = new Dictionary<string, IConnection>();
+        private readonly Dictionary<string, IModel> _channels = new Dictionary<string, IModel>();
 
-        public void Initialize(RabbitMQ_ConnectionObj rabbitObj)
+        public void Initialize(string sessionId ,RabbitMQ_ConnectionObj rabbitObj)
         {
+
+            if (_connections.ContainsKey(sessionId))
+            {
+                _connections[sessionId].Close();
+                _connections.Remove(sessionId);
+            }
+
             var factory = new ConnectionFactory()
             {
                 HostName = rabbitObj.HostName,
@@ -26,21 +33,40 @@ namespace KevDevTools.Services
                 }
             };
 
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
 
-            _channel.QueueDeclare(queue: rabbitObj.QueueName,
+            channel.QueueDeclare(queue: rabbitObj.QueueName,
                 durable: rabbitObj.Durable,
                 exclusive: rabbitObj.Exclusive,
                 autoDelete: rabbitObj.AutoDelete);
+
+            _connections[sessionId] = connection;
+            _channels[sessionId] = channel;
         }
 
-        public IModel GetChannel() => _channel;
-
-        public void Dispose()
+        public IModel GetChannel(string sessionId)
         {
-            _channel?.Dispose();
-            _connection?.Dispose();
+            if (!_channels.ContainsKey(sessionId))
+                throw new InvalidOperationException("RabbitMQService is not initialized for this session.");
+
+            return _channels[sessionId];
+        }
+
+
+        public void Dispose(string sessionId)
+        {
+            if (_channels.ContainsKey(sessionId))
+            {
+                _channels[sessionId].Close();
+                _channels.Remove(sessionId);
+            }
+
+            if (_connections.ContainsKey(sessionId))
+            {
+                _connections[sessionId].Close();
+                _connections.Remove(sessionId);
+            }
         }
     }
 }

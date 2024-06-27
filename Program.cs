@@ -8,6 +8,7 @@ namespace KevDevTools
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSession();
 
             builder.Services.AddSingleton<Services.RabbitMQService>();
 
@@ -26,6 +27,7 @@ namespace KevDevTools
 
             app.UseRouting();
 
+            app.UseSession();
             app.UseAuthorization();
 
             app.MapControllerRoute(
