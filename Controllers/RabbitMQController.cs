@@ -1,4 +1,5 @@
 ﻿using KevDevTools.Models.RabbitMQ;
+using KevDevTools.Services;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
 
@@ -6,6 +7,13 @@ namespace KevDevTools.Controllers
 {
     public class RabbitMQController : Controller
     {
+        private readonly RabbitMQService _rabbitMQService;
+
+        public RabbitMQController(RabbitMQService rabbitMQService)
+        {
+            _rabbitMQService = rabbitMQService;
+        }
+
         public IActionResult RabbitMQ_Tool(RabbitMQ_ConnectionObj rabbitObj)
         {
             ViewBag.RabbitObj = rabbitObj;
@@ -14,31 +22,12 @@ namespace KevDevTools.Controllers
 
         public IActionResult ConnectToRabbitService(RabbitMQ_ConnectionObj rabbitObj)
         {
-            var factory = new ConnectionFactory()
-            {
-                HostName = rabbitObj.HostName,
-                UserName = rabbitObj.UserName,
-                Password = rabbitObj.Password,
-                VirtualHost = rabbitObj.VirtualHost,
-                Port = rabbitObj.Port,
-                Ssl = new SslOption()
-                {
-                    Enabled = true,
-                    ServerName = rabbitObj.HostName
-                }
-            };
             try
             {
-                using var connection = factory.CreateConnection();
-                using var channel = connection.CreateModel();
-
-                channel.QueueDeclare(queue: rabbitObj.QueueName,
-                    durable: rabbitObj.Durable,
-                    exclusive: rabbitObj.Exclusive,
-                    autoDelete: rabbitObj.AutoDelete);
-
+                _rabbitMQService.Initialize(rabbitObj);
+                var channel = _rabbitMQService.GetChannel();
                 rabbitObj.Connected = true;
-            } catch (Exception ex)
+            } catch
             {
                 rabbitObj.Connected = false;
             }

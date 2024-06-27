@@ -9,6 +9,8 @@ namespace KevDevTools
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddSingleton<Services.RabbitMQService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
