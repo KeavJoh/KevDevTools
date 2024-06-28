@@ -1,6 +1,4 @@
-﻿using KevDevTools.Controllers;
-using KevDevTools.Interfaces;
-using KevDevTools.Models.RabbitMQ;
+﻿using KevDevTools.Models.RabbitMQ;
 using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -11,14 +9,12 @@ namespace KevDevTools.Services
 {
     public class RabbitMQService
     {
-        private readonly IHubContext<MessageHubService> _hubContext;
         private readonly Dictionary<string, IConnection> _connections = new Dictionary<string, IConnection>();
         private readonly Dictionary<string, IModel> _channels = new Dictionary<string, IModel>();
         private RabbitMQ_MessageList _rabbitMQ_MessageList;
 
-        public RabbitMQService(IHubContext<MessageHubService> hubContext, RabbitMQ_MessageList rabbitMQ_MessageList)
+        public RabbitMQService(RabbitMQ_MessageList rabbitMQ_MessageList)
         {
-            _hubContext = hubContext;
             _rabbitMQ_MessageList = rabbitMQ_MessageList;
         }
 

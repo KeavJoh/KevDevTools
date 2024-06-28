@@ -1,7 +1,4 @@
-using KevDevTools.Controllers;
-using KevDevTools.Interfaces;
 using KevDevTools.Models.RabbitMQ;
-using KevDevTools.Services;
 
 namespace KevDevTools
 {
@@ -39,11 +36,6 @@ namespace KevDevTools
 
             app.UseSession();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<MessageHubService>("/messagehub");
-            });
 
             app.MapControllerRoute(
                 name: "default",

@@ -1,5 +1,4 @@
-﻿using KevDevTools.Interfaces;
-using KevDevTools.Models.RabbitMQ;
+﻿using KevDevTools.Models.RabbitMQ;
 using KevDevTools.Services;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
