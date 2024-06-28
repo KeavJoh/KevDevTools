@@ -1,4 +1,5 @@
-﻿using KevDevTools.Models.RabbitMQ;
+﻿using KevDevTools.Interfaces;
+using KevDevTools.Models.RabbitMQ;
 using KevDevTools.Services;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
@@ -8,14 +9,18 @@ namespace KevDevTools.Controllers
     public class RabbitMQController : Controller
     {
         private readonly RabbitMQService _rabbitMQService;
+        private RabbitMQ_MessageList _rabbitMQ_MessageList;
 
-        public RabbitMQController(RabbitMQService rabbitMQService)
+        public RabbitMQController(RabbitMQService rabbitMQService, RabbitMQ_MessageList rabbitMQ_MessageList)
         {
             _rabbitMQService = rabbitMQService;
+            _rabbitMQ_MessageList = rabbitMQ_MessageList;
         }
 
-        public IActionResult RabbitMQ_Tool(RabbitMQ_ConnectionObj rabbitObj)
+        public IActionResult RabbitMQ_Tool()
         {
+            RabbitMQ_ConnectionObj rabbitObj = new RabbitMQ_ConnectionObj();
+
             if (RabbitMQConnectionExists())
             {
                 rabbitObj = GetRabbitMQConnectionObjFromSession();
@@ -40,6 +45,27 @@ namespace KevDevTools.Controllers
             return RedirectToAction("RabbitMQ_Tool");
         }
 
+        public IActionResult SendMessageToRabbitMQ(string message)
+        {
+            var rabbitObj = GetRabbitMQConnectionObjFromSession();
+            _rabbitMQService.SendMessage(HttpContext.Session.Id, message, rabbitObj.QueueName);
+            return RedirectToAction("ReceiveMessages");
+        }
+
+        public IActionResult ReceiveMessages()
+        {
+            var rabbitObj = GetRabbitMQConnectionObjFromSession();
+            var messages = _rabbitMQ_MessageList.Messages.Where(x => x.SessionId == HttpContext.Session.Id).Select(x => x.Message).ToList();
+            rabbitObj.Messages.Clear();
+            foreach (var message in messages)
+            {
+                rabbitObj.Messages.Add(message);
+            }
+            HttpContext.Session.Remove("RabbitMQ_ConnectionObj");
+            HttpContext.Session.SetString("RabbitMQ_ConnectionObj", Newtonsoft.Json.JsonConvert.SerializeObject(rabbitObj));
+            return RedirectToAction("RabbitMQ_Tool");
+        }
+
         private RabbitMQ_ConnectionObj GetRabbitMQConnectionObjFromSession()
         {
             var rabbitObjString = HttpContext.Session.GetString("RabbitMQ_ConnectionObj");
@@ -55,6 +81,16 @@ namespace KevDevTools.Controllers
             return !string.IsNullOrEmpty(HttpContext.Session.GetString("RabbitMQ_ConnectionObj"));
         }
 
+        //private bool RabbitMQMessageExists()
+        //{
+        //    return !string.IsNullOrEmpty(HttpContext.Session.GetString("RabbitMQ_Message"));
+        //}
+
+        //private string GetRabbitMQMessageFromSession()
+        //{
+        //    return HttpContext.Session.GetString("RabbitMQ_Message");
+        //}
+
         public IActionResult CloseRabbitConnection()
         {
             var rabbitObj = GetRabbitMQConnectionObjFromSession();
@@ -63,5 +99,6 @@ namespace KevDevTools.Controllers
             rabbitObj.Connected = false;
             return RedirectToAction("RabbitMQ_Tool", rabbitObj);
         }
+
     }
 }

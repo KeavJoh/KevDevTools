@@ -1,3 +1,8 @@
+using KevDevTools.Controllers;
+using KevDevTools.Interfaces;
+using KevDevTools.Models.RabbitMQ;
+using KevDevTools.Services;
+
 namespace KevDevTools
 {
     public class Program
@@ -11,6 +16,11 @@ namespace KevDevTools
             builder.Services.AddSession();
 
             builder.Services.AddSingleton<Services.RabbitMQService>();
+            builder.Services.AddSingleton<RabbitMQ_MessageList>();
+
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -29,6 +39,11 @@ namespace KevDevTools
 
             app.UseSession();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<MessageHubService>("/messagehub");
+            });
 
             app.MapControllerRoute(
                 name: "default",
