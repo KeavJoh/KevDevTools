@@ -95,15 +95,15 @@ else
             <label class="form-label select-label">Arguments</label>
         </div>
     </div>
+    @if (rabbitObj.Connected)
+    {
+        <a type="button" class="btn btn-danger mt-4" asp-controller="RabbitMQ" asp-action="CloseRabbitConnection">Disconnect</a>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary mt-4" data-mdb-ripple-init disabled="@rabbitObj.Connected">Connect</button>
+    }
 </form>
-@if (rabbitObj.Connected)
-{
-    <a type="button" class="btn btn-danger mt-4" asp-controller="RabbitMQ" asp-action="CloseRabbitConnection">Disconnect</a>
-}
-else
-{
-    <button type="submit" class="btn btn-primary mt-4" data-mdb-ripple-init disabled="@rabbitObj.Connected">Connect</button>
-}
 
 @if(rabbitObj.Connected == true)
 {
