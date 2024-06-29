@@ -1,4 +1,5 @@
 using KevDevTools.Models.RabbitMQ;
+using KevDevTools.Services;
 using KevDevTools.Hubs;
 
 namespace KevDevTools
@@ -13,8 +14,9 @@ namespace KevDevTools
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();
 
-            builder.Services.AddSingleton<Services.RabbitMQService>();
+            builder.Services.AddSingleton<RabbitMQService>();
             builder.Services.AddSingleton<RabbitMQ_MessageList>();
+            builder.Services.AddSingleton<ViewCounterHub>();
 
             builder.Services.AddHttpContextAccessor();
 
@@ -32,11 +34,10 @@ namespace KevDevTools
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseRouting();
-
             app.UseSession();
+            app.UseRouting();
             app.UseAuthorization();
+            app.UseMiddleware<HttpDelegateService>();
 
             app.MapControllerRoute(
                 name: "default",

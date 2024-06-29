@@ -1,4 +1,5 @@
-﻿using KevDevTools.Models.RabbitMQ;
+﻿using KevDevTools.Hubs;
+using KevDevTools.Models.RabbitMQ;
 using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -12,10 +13,12 @@ namespace KevDevTools.Services
         private readonly Dictionary<string, IConnection> _connections = new Dictionary<string, IConnection>();
         private readonly Dictionary<string, IModel> _channels = new Dictionary<string, IModel>();
         private RabbitMQ_MessageList _rabbitMQ_MessageList;
+        private readonly IHubContext<ViewCounterHub> _viewCounterHub;
 
-        public RabbitMQService(RabbitMQ_MessageList rabbitMQ_MessageList)
+        public RabbitMQService(RabbitMQ_MessageList rabbitMQ_MessageList, IHubContext<ViewCounterHub> viewCounterHub)
         {
             _rabbitMQ_MessageList = rabbitMQ_MessageList;
+            _viewCounterHub = viewCounterHub;
         }
 
         public void Initialize(string sessionId, RabbitMQ_ConnectionObj rabbitObj)
@@ -74,6 +77,7 @@ namespace KevDevTools.Services
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 _rabbitMQ_MessageList.Messages.Add(new RabbitMQ_MessageObj { Message = message, SessionId = sessionId });
+                await _viewCounterHub.Clients.All.SendAsync("ReceiveMessage", message);
             };
 
             channel.BasicConsume(queue: queueName,

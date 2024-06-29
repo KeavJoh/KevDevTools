@@ -12,6 +12,21 @@ connectionViewCount.on("updateTotalViews", (value) => {
     newCountSpan.innerText = value.toString();
 })
 
+connectionViewCount.on("ReceiveMessage", (value) => {
+    console.log(value);
+    var newMessage = document.getElementById("messagesList");
+    newMessage.innerHTML += `
+        <div class="row mt-4">
+            <div class="col-6">
+                <div class="form-outline" data-mdb-input-init>
+                    <input type="text" class="form-control" value="${value}" disabled />
+                    <label class="form-label">Message</label>
+                </div>
+            </div>
+        </div>
+    `;
+});
+
 //invoke hub methods aka send notification to hub
 function newWindowLoadedOnCLient() {
     connectionViewCount.send("NewWindowsLoaded");

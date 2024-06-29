@@ -125,16 +125,18 @@ else
     <h1>Receive message from RabbitMQ</h1>
     <a type="button" asp-controller="RabbitMQ" asp-action="ReceiveMessages" class="btn btn-primary mt-4" data-mdb-ripple-init>Receive</a>
     <div id="messagesList">
-        @foreach (var message in rabbitObj.Messages)
-        {
             <div class="row mt-4">
                 <div class="col-6">
                     <div class="form-outline" data-mdb-input-init>
-                        <input type="text" class="form-control" value="@message" disabled />
+                        <input type="text" class="form-control" value="Testtext" disabled />
                         <label class="form-label">Message</label>
                     </div>
                 </div>
             </div>
-        }
     </div>
+}
+
+
+@section Scripts {
+    <script src="~/js/signalR/ViewCount.js"></script>
 }
