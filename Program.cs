@@ -1,4 +1,5 @@
 using KevDevTools.Models.RabbitMQ;
+using KevDevTools.Hubs;
 
 namespace KevDevTools
 {
@@ -40,6 +41,8 @@ namespace KevDevTools
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<ViewCounterHub>("/hubs/viewcounterhub");
 
             app.Run();
         }
