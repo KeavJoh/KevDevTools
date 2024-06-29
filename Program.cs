@@ -42,7 +42,7 @@ namespace KevDevTools
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.MapHub<ViewCounterHub>("/hubs/viewcounterhub");
+            app.MapHub<ViewCounterHub>("/hubs/viewCounterHub");
 
             app.Run();
         }

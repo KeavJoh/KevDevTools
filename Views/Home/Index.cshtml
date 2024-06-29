@@ -2,7 +2,19 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-3">Total Views: </div>
+    <div class="col-4">
+        <span id="totalViewsCount"></span>
+    </div>
 </div>
+<div class="row">
+    <div class="col-3">Current Online: </div>
+<div class="col-4">
+    <span id="currentViewsCount"></span>
+</div>
+</div
+
+@section Scripts {
+    <script src="~/js/signalR/ViewCount.js"></script>
+}
