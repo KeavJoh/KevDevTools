@@ -44,6 +44,7 @@ namespace KevDevTools
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapHub<ViewCounterHub>("/hubs/viewCounterHub");
+            app.MapHub<RabbitMQToolHub>("/hubs/rabbitMQToolHub");
 
             app.Run();
         }

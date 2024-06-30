@@ -12,6 +12,7 @@
         public bool Exclusive { get; set; }
         public bool AutoDelete { get; set; }
         public bool Connected { get; set; }
+        public string SessionId { get; set; }
         public List<string> Messages { get; set; } = new List<string>();
     }
 }

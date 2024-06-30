@@ -1,32 +1,36 @@
 ﻿@{
     ViewData["Title"] = "RabbitMQ_Tool";
-    var rabbitObj = ViewBag.RabbitObj as KevDevTools.Models.RabbitMQ.RabbitMQ_ConnectionObj;
+    var sessionId = ViewBag.SessionId;
 }
 
 <h1>Set connection to RabbitMQ service</h1>
-@if (rabbitObj.Connected == false)
-{
-    <div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="danger">
-        Not connected
-    </div>
-}
-else
-{
-    <div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="success">
-        Connected
-    </div>
-}
-<form asp-controller="RabbitMQ" asp-action="ConnectToRabbitService">
+
+<div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="danger">
+    Not connected
+</div>
+<div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="success" hidden>
+    Connected
+</div>
+
+<form id="rabbitConnectionForm">
     <div class="row mt-4">
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="text" class="form-control" asp-for="@rabbitObj.HostName" required disabled="@rabbitObj.Connected" />
+                <input type="text" class="form-control" asp-for="@sessionId" name="SessionId" required disabled/>
+                <label class="form-label">SessionId</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" id="HostName" name="HostName" required />
                 <label class="form-label">HostName</label>
             </div>
         </div>
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="text" class="form-control" asp-for="@rabbitObj.UserName" required disabled="@rabbitObj.Connected" />
+                <input type="text" class="form-control" id="UserName" name="UserName" required />
                 <label class="form-label">UserName</label>
             </div>
         </div>
@@ -35,13 +39,13 @@ else
     <div class="row mt-4">
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="text" class="form-control" asp-for="@rabbitObj.Password" required disabled="@rabbitObj.Connected" />
+                <input type="text" class="form-control" id="Password" name="Password" required />
                 <label class="form-label">Password</label>
             </div>
         </div>
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="text" class="form-control" asp-for="@rabbitObj.VirtualHost" disabled="@rabbitObj.Connected" />
+                <input type="text" class="form-control" id="VirtualHost" name="VirtualHost" />
                 <label class="form-label">VirtualHost</label>
             </div>
         </div>
@@ -50,13 +54,13 @@ else
     <div class="row mt-4">
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="number" class="form-control" asp-for="@rabbitObj.Port" required disabled="@rabbitObj.Connected" />
+                <input type="number" class="form-control" id="Port" name="Port" required />
                 <label class="form-label">Port</label>
             </div>
         </div>
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="text" class="form-control" asp-for="@rabbitObj.QueueName" required disabled="@rabbitObj.Connected" />
+                <input type="text" class="form-control" id="QueName" name="QueName" required />
                 <label class="form-label">QueName</label>
             </div>
         </div>
@@ -64,14 +68,14 @@ else
 
     <div class="row mt-4">
         <div class="col-6">
-            <select data-mdb-select-init asp-for="@rabbitObj.Durable" disabled="@rabbitObj.Connected">
+            <select data-mdb-select-init id="Durable" name="Durable">
                 <option value="0">False</option>
                 <option value="1">True</option>
             </select>
             <label class="form-label select-label">Durable</label>
         </div>
         <div class="col-6">
-            <select data-mdb-select-init asp-for="@rabbitObj.Exclusive" disabled="@rabbitObj.Connected">
+            <select data-mdb-select-init id="Exclusive" name="Exclusive">
                 <option value="0">False</option>
                 <option value="1">True</option>
             </select>
@@ -81,31 +85,25 @@ else
 
     <div class="row mt-4">
         <div class="col-6">
-            <select data-mdb-select-init asp-for="@rabbitObj.AutoDelete" disabled="@rabbitObj.Connected">
+            <select data-mdb-select-init id="AutoDelete" name="AutoDelete">
                 <option value="0">False</option>
                 <option value="1">True</option>
             </select>
             <label class="form-label select-label">AutoDelete</label>
         </div>
         <div class="col-6">
-            <select data-mdb-select-init disabled>
+            <select data-mdb-select-init id="Arguments" name="Arguments" disabled>
                 <option value="0">False</option>
                 <option value="1">True</option>
             </select>
             <label class="form-label select-label">Arguments</label>
         </div>
     </div>
-    @if (rabbitObj.Connected)
-    {
-        <a type="button" class="btn btn-danger mt-4" asp-controller="RabbitMQ" asp-action="CloseRabbitConnection">Disconnect</a>
-    }
-    else
-    {
-        <button type="submit" class="btn btn-primary mt-4" data-mdb-ripple-init disabled="@rabbitObj.Connected">Connect</button>
-    }
+    <a type="button" class="btn btn-danger mt-4" hidden>Disconnect</a>
+    <button type="submit" class="btn btn-primary mt-4" data-mdb-ripple-init>Connect</button>
 </form>
 
-@if(rabbitObj.Connected == true)
+@* @if(rabbitObj.Connected == true)
 {
     <h1>Send message to RabbitMQ</h1>
     <form asp-controller="RabbitMQ" asp-action="SendMessageToRabbitMQ">
@@ -134,9 +132,9 @@ else
                 </div>
             </div>
     </div>
-}
+} *@
 
 
 @section Scripts {
-    <script src="~/js/signalR/ViewCount.js"></script>
+    <script src="~/js/signalR/RabbitMQTool.js"></script>
 }
