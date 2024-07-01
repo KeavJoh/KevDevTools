@@ -16,16 +16,22 @@ function createRabbitConnectionOnServer(event) {
         Password: formData.get('Password'),
         VirtualHost: formData.get('VirtualHost'),
         Port: parseInt(formData.get('Port')),
-        QueName: formData.get('QueName'),
+        QueueName: formData.get('QueueName'),
         Durable: formData.get('Durable') === "1",
         Exclusive: formData.get('Exclusive') === "1",
         AutoDelete: formData.get('AutoDelete') === "1",
-        SessionId: document.querySelector('input[name="SessionId"]').value
+        SessionId: document.querySelector('input[name="SessionId"]').value,
+        ConnectionId: "test",
+        Connected: false
     };
 
     console.log('Sending connection data:', connectionData); // Log data being sent
 
-    connectionViewCount.send("CreateRabbitConnection", connectionData);
+    connectionViewCount.invoke("CreateRabbitConnection", connectionData)
+        .then(function (response) {
+            console.log('ConnectionId:', response.connectionId);
+            console.log('ConnectionStatus:', response.connected);
+        })
 }
 
 //start connection

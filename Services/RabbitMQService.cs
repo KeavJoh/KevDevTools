@@ -21,40 +21,52 @@ namespace KevDevTools.Services
             _viewCounterHub = viewCounterHub;
         }
 
-        public void Initialize(string sessionId, RabbitMQ_ConnectionObj rabbitObj)
+        public RabbitMQ_ConnectionObj Initialize(RabbitMQ_ConnectionObj rabbitObj)
         {
-            if (_connections.ContainsKey(sessionId))
+            try
             {
-                _connections[sessionId].Close();
-                _connections.Remove(sessionId);
-            }
-
-            var factory = new ConnectionFactory()
-            {
-                HostName = rabbitObj.HostName,
-                UserName = rabbitObj.UserName,
-                Password = rabbitObj.Password,
-                VirtualHost = rabbitObj.VirtualHost,
-                Port = rabbitObj.Port,
-                Ssl = new SslOption()
+                if (_connections.ContainsKey(rabbitObj.SessionId))
                 {
-                    Enabled = true,
-                    ServerName = rabbitObj.HostName
+                    _connections[rabbitObj.SessionId].Close();
+                    _connections.Remove(rabbitObj.SessionId);
                 }
-            };
 
-            var connection = factory.CreateConnection();
-            var channel = connection.CreateModel();
+                var factory = new ConnectionFactory()
+                {
+                    HostName = rabbitObj.HostName,
+                    UserName = rabbitObj.UserName,
+                    Password = rabbitObj.Password,
+                    VirtualHost = rabbitObj.VirtualHost,
+                    Port = rabbitObj.Port,
+                    Ssl = new SslOption()
+                    {
+                        Enabled = true,
+                        ServerName = rabbitObj.HostName
+                    }
+                };
 
-            channel.QueueDeclare(queue: rabbitObj.QueueName,
-                durable: rabbitObj.Durable,
-                exclusive: rabbitObj.Exclusive,
-                autoDelete: rabbitObj.AutoDelete);
+                var connection = factory.CreateConnection();
+                var channel = connection.CreateModel();
 
-            _connections[sessionId] = connection;
-            _channels[sessionId] = channel;
+                channel.QueueDeclare(queue: rabbitObj.QueueName,
+                    durable: rabbitObj.Durable,
+                    exclusive: rabbitObj.Exclusive,
+                    autoDelete: rabbitObj.AutoDelete);
 
-            Task.Run(() => ReceiveMessages(channel, sessionId, rabbitObj.QueueName));
+                _connections[rabbitObj.SessionId] = connection;
+                _channels[rabbitObj.SessionId] = channel;
+
+                Task.Run(() => ReceiveMessages(channel, rabbitObj.SessionId, rabbitObj.QueueName, rabbitObj.ConnectionId));
+
+                rabbitObj.Connected = true;
+
+                return rabbitObj;
+            } catch
+            {
+                rabbitObj.Connected = false;
+
+                return rabbitObj;
+            }
         }
 
         public void SendMessage(string sessionId, string message, string queueName)
@@ -69,7 +81,7 @@ namespace KevDevTools.Services
             Task.Delay(2000).Wait();
         }
 
-        private async Task ReceiveMessages(IModel channel, string sessionId, string queueName)
+        private async Task ReceiveMessages(IModel channel, string sessionId, string queueName, string connectionId)
         {
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (model, ea) =>
