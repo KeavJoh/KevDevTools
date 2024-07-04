@@ -5,10 +5,10 @@
 
 <h1>Set connection to RabbitMQ service</h1>
 
-<div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="danger">
+<div data-mdb-alert-init class="alert mt-4" role="alert" id="bannerRabbitMQDisconnected" data-mdb-color="danger">
     Not connected
 </div>
-<div data-mdb-alert-init class="alert mt-4" role="alert" data-mdb-color="success" hidden>
+<div data-mdb-alert-init class="alert mt-4" role="alert" id="bannerRabbitMQConnected" data-mdb-color="success" hidden>
     Connected
 </div>
 
@@ -16,8 +16,14 @@
     <div class="row mt-4">
         <div class="col-6">
             <div class="form-outline" data-mdb-input-init>
-                <input type="text" class="form-control" asp-for="@sessionId" name="SessionId" required disabled/>
+                <input type="text" class="form-control" asp-for="@sessionId" name="SessionId" id="sessionId" required disabled />
                 <label class="form-label">SessionId</label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" id="connectionId" name="ConnectionId" disabled />
+                <label class="form-label">ConnectionId</label>
             </div>
         </div>
     </div>
@@ -99,12 +105,11 @@
             <label class="form-label select-label">Arguments</label>
         </div>
     </div>
-    <a type="button" class="btn btn-danger mt-4" hidden>Disconnect</a>
-    <button type="submit" class="btn btn-primary mt-4" data-mdb-ripple-init>Connect</button>
+    <button type="submit" class="btn btn-danger mt-4" id="btnDisconnect" data-mdb-ripple-init hidden>Disconnect</button>
+    <button type="submit" class="btn btn-primary mt-4" id="btnConnect" data-mdb-ripple-init>Connect</button>
 </form>
 
-@* @if(rabbitObj.Connected == true)
-{
+<div id="receiveAndSendingSection" hidden>
     <h1>Send message to RabbitMQ</h1>
     <form asp-controller="RabbitMQ" asp-action="SendMessageToRabbitMQ">
         <div class="row mt-4">
@@ -123,16 +128,16 @@
     <h1>Receive message from RabbitMQ</h1>
     <a type="button" asp-controller="RabbitMQ" asp-action="ReceiveMessages" class="btn btn-primary mt-4" data-mdb-ripple-init>Receive</a>
     <div id="messagesList">
-            <div class="row mt-4">
-                <div class="col-6">
-                    <div class="form-outline" data-mdb-input-init>
-                        <input type="text" class="form-control" value="Testtext" disabled />
-                        <label class="form-label">Message</label>
-                    </div>
+        <div class="row mt-4">
+            <div class="col-6">
+                <div class="form-outline" data-mdb-input-init>
+                    <input type="text" class="form-control" value="Testtext" disabled />
+                    <label class="form-label">Message</label>
                 </div>
             </div>
+        </div>
     </div>
-} *@
+</div>
 
 
 @section Scripts {

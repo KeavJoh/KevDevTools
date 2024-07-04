@@ -107,7 +107,7 @@ namespace KevDevTools.Services
             return _channels[sessionId];
         }
 
-        public void Dispose(string sessionId)
+        public void Dispose(string sessionId) 
         {
             if (_channels.ContainsKey(sessionId))
             {
