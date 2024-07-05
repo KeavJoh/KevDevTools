@@ -12,12 +12,10 @@ namespace KevDevTools.Services
     {
         private readonly Dictionary<string, IConnection> _connections = new Dictionary<string, IConnection>();
         private readonly Dictionary<string, IModel> _channels = new Dictionary<string, IModel>();
-        private RabbitMQ_MessageList _rabbitMQ_MessageList;
         private readonly IHubContext<RabbitMQToolHub> _rabbitMQToolHub;
 
-        public RabbitMQService(RabbitMQ_MessageList rabbitMQ_MessageList, IHubContext<RabbitMQToolHub> rabbitMQToolHub)
+        public RabbitMQService(IHubContext<RabbitMQToolHub> rabbitMQToolHub)
         {
-            _rabbitMQ_MessageList = rabbitMQ_MessageList;
             _rabbitMQToolHub = rabbitMQToolHub;
         }
 

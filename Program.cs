@@ -15,7 +15,6 @@ namespace KevDevTools
             builder.Services.AddSession();
 
             builder.Services.AddSingleton<RabbitMQService>();
-            builder.Services.AddSingleton<RabbitMQ_MessageList>();
             builder.Services.AddSingleton<ViewCounterHub>();
 
             builder.Services.AddHttpContextAccessor();
@@ -37,7 +36,6 @@ namespace KevDevTools
             app.UseSession();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseMiddleware<HttpDelegateService>();
 
             app.MapControllerRoute(
                 name: "default",
