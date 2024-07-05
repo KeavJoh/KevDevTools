@@ -4,9 +4,9 @@
             document.getElementById('alert-success').innerText = message;
             mdb.Alert.getInstance(document.getElementById('alert-success')).show();
             break;
-        case 'danger':
-            document.getElementById('alert-danger').innerText = message;
-            mdb.Alert.getInstance(document.getElementById('alert-danger')).show();
+        case 'error':
+            document.getElementById('alert-error').innerText = message;
+            mdb.Alert.getInstance(document.getElementById('alert-error')).show();
             break;
     }
 }

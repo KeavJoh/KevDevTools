@@ -102,13 +102,13 @@ function createRabbitConnectionOnServer(event) {
             } else {
                 document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
                 document.getElementById('bannerRabbitMQConnected').setAttribute("hidden", true);
-                triggerAlert('danger', 'Connection failure! Please check parameters!');
+                triggerAlert('error', 'Connection failure! Please check parameters!');
             }
         })
         .catch(function (error) {
             document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
             document.getElementById('bannerRabbitMQConnected').setAttribute("hidden", true);
-            triggerAlert('danger', error);
+            triggerAlert('error', error);
         });
 }
 

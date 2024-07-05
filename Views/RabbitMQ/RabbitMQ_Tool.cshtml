@@ -3,35 +3,8 @@
     var sessionId = ViewBag.SessionId;
 }
 
-<div data-mdb-alert-init
-     class="alert fade"
-     id="alert-success"
-     role="alert"
-     data-mdb-color="success"
-     data-mdb-position="top-right"
-     data-mdb-stacking="true"
-     data-mdb-width="535px"
-     data-mdb-width="535px"
-     data-mdb-append-to-body="true"
-     data-mdb-hidden="true"
-     data-mdb-autohide="true"
-     data-mdb-delay="5000">
-</div>
-
-<div data-mdb-alert-init
-     class="alert fade"
-     id="alert-danger"
-     role="alert"
-     data-mdb-color="danger"
-     data-mdb-position="top-right"
-     data-mdb-stacking="true"
-     data-mdb-width="535px"
-     data-mdb-width="535px"
-     data-mdb-append-to-body="true"
-     data-mdb-hidden="true"
-     data-mdb-autohide="true"
-     data-mdb-delay="5000">
-</div>
+@await Html.PartialAsync("~/Views/Shared/Alerts/_SuccessAlert.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Alerts/_AlertError.cshtml")
 
 <h1>Set connection to RabbitMQ service</h1>
 
