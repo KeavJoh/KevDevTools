@@ -24,6 +24,22 @@ namespace KevDevTools.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
+        public async Task<bool> SendMessageWithRabbitMQ(string message, string queueName)
+        {
+            var connectionId = Context.ConnectionId;
+            if (RabbitMQConnectionDictionary.rabbitConnectionIds.TryGetValue(connectionId, out string value))
+            {
+                try
+                {
+                    return await _rabbitMQService.SendMessage(value, message, queueName); ;
+                } catch
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         public Task<RabbitMQ_ConnectionObj> CreateRabbitConnection(RabbitMQ_ConnectionObj connectionObj)
         {
             var connectionId = Context.ConnectionId;

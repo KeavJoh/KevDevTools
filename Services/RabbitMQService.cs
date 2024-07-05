@@ -13,12 +13,12 @@ namespace KevDevTools.Services
         private readonly Dictionary<string, IConnection> _connections = new Dictionary<string, IConnection>();
         private readonly Dictionary<string, IModel> _channels = new Dictionary<string, IModel>();
         private RabbitMQ_MessageList _rabbitMQ_MessageList;
-        private readonly IHubContext<ViewCounterHub> _viewCounterHub;
+        private readonly IHubContext<RabbitMQToolHub> _rabbitMQToolHub;
 
-        public RabbitMQService(RabbitMQ_MessageList rabbitMQ_MessageList, IHubContext<ViewCounterHub> viewCounterHub)
+        public RabbitMQService(RabbitMQ_MessageList rabbitMQ_MessageList, IHubContext<RabbitMQToolHub> rabbitMQToolHub)
         {
             _rabbitMQ_MessageList = rabbitMQ_MessageList;
-            _viewCounterHub = viewCounterHub;
+            _rabbitMQToolHub = rabbitMQToolHub;
         }
 
         public RabbitMQ_ConnectionObj Initialize(RabbitMQ_ConnectionObj rabbitObj)
@@ -69,16 +69,22 @@ namespace KevDevTools.Services
             }
         }
 
-        public void SendMessage(string sessionId, string message, string queueName)
+        public Task<bool> SendMessage(string sessionId, string message, string queueName)
         {
-            var channel = GetChannel(sessionId);
-            var body = Encoding.UTF8.GetBytes(message);
+            try
+            {
+                var channel = GetChannel(sessionId);
+                var body = Encoding.UTF8.GetBytes(message);
 
-            channel.BasicPublish(exchange: string.Empty,
-                               routingKey: queueName,
-                               basicProperties: null,
-                               body: body);
-            Task.Delay(2000).Wait();
+                channel.BasicPublish(exchange: string.Empty,
+                                   routingKey: queueName,
+                                   basicProperties: null,
+                                   body: body);
+                return Task.FromResult(true);
+            } catch
+            {
+                return Task.FromResult(false);
+            }
         }
 
         private async Task ReceiveMessages(IModel channel, string sessionId, string queueName, string connectionId)
@@ -88,8 +94,7 @@ namespace KevDevTools.Services
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                _rabbitMQ_MessageList.Messages.Add(new RabbitMQ_MessageObj { Message = message, SessionId = sessionId });
-                await _viewCounterHub.Clients.All.SendAsync("ReceiveMessage", message);
+                await _rabbitMQToolHub.Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
             };
 
             channel.BasicConsume(queue: queueName,

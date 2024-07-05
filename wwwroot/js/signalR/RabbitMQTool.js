@@ -8,8 +8,41 @@ var elementsToDisable = [
 ];
 
 //connect to methods that hub invokes aka receive notifications from hub
+connectionViewCount.on("receiveMessage", (value) => {
+    document.getElementById('messageList').innerHTML +=
+        '<div class="row mt-4 justify-content-center">' +
+        '<div class="col-6 d-flex justify-content-center">' +
+        '<div class="form-outline" data-mdb-input-init>' +
+        '<input type="text" class="form-control" value="' + value +'" disabled />' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    console.log('Message received:', value);
+})
+
+function receiveMessage(message) {
+    document.getElementById('messageList').innerHTML +=
+        '<div class="form-outline" data-mdb-input-init>' +
+        '<input type="text" class="form-control" value="Testtext" disabled />' +
+        '</div>';
+    console.log('Message received:', message);
+}
 
 //invoke hub methods aka send notification to hub
+function sendMessage(event) {
+    event.preventDefault();
+
+    var message = document.getElementById('messageToSend').value;
+    var queueName = document.getElementById('QueueName').value;
+    connectionViewCount.invoke("SendMessageWithRabbitMQ", message, queueName).then(function (response) {
+        if (response) {
+            console.log('Message sent:', message);
+        } else {
+            console.log('Message not sent:', message);
+        };
+    });
+}
+
 function deleteRabbitConnectionFromServer(event) {
     event.preventDefault();
 
@@ -28,9 +61,8 @@ function deleteRabbitConnectionFromServer(event) {
 
     document.getElementById('btnConnect').removeAttribute("hidden");
     document.getElementById('btnDisconnect').setAttribute("hidden", true);
-
-    console.log('Connection deleted');
 }
+
 function createRabbitConnectionOnServer(event) {
     event.preventDefault();
 
@@ -95,3 +127,4 @@ connectionViewCount.start().then(fulfilled, rejected);
 
 document.getElementById('rabbitConnectionForm').addEventListener('submit', createRabbitConnectionOnServer);
 document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitConnectionFromServer);
+document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
