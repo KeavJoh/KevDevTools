@@ -3,6 +3,21 @@
 document.getElementById('rabbitConnectionForm').addEventListener('submit', createRabbitConnectionOnServer);
 document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitConnectionFromServer);
 document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
+document.getElementById('selectSendingAndReceivingInSingleQueue').addEventListener('click', switchReceivingSettings)
+
+window.onload = function () {
+    switchReceivingSettings();
+}
+
+function switchReceivingSettings() {
+    var receivingQueueName = document.getElementById('ReceivingQueueName');
+    if (document.getElementById('selectSendingAndReceivingInSingleQueue').checked) {
+        receivingQueueName.value = "";
+        receivingQueueName.setAttribute("disabled", true);
+    } else {
+        receivingQueueName.removeAttribute("disabled");
+    }
+}
 
 //create connection
 var connectionRabbitMQService = new signalR.HubConnectionBuilder().withUrl("/hubs/rabbitMQToolHub").build();
@@ -52,10 +67,12 @@ function deleteRabbitConnectionFromServer(event) {
                 document.getElementById('receiveAndSendingSection').setAttribute("hidden", true);
                 document.getElementById('btnConnect').removeAttribute("hidden");
                 document.getElementById('btnDisconnect').setAttribute("hidden", true);
+                document.getElementById('selectSendingAndReceivingInSingleQueue').removeAttribute("disabled");
 
                 formularElemets.forEach(function (id) {
                     document.getElementById(id).removeAttribute("disabled");
                 });
+                switchReceivingSettings();
                 triggerAlert('success', 'Connection deleted successfully!');
             } else {
                 triggerAlert('error', 'Connection deletion failed!');
@@ -102,6 +119,7 @@ function createRabbitConnectionOnServer(event) {
                 document.getElementById('btnConnect').setAttribute("hidden", true);
                 document.getElementById('btnDisconnect').removeAttribute("hidden");
                 document.getElementById('receiveAndSendingSection').removeAttribute("hidden");
+                document.getElementById('selectSendingAndReceivingInSingleQueue').setAttribute("disabled", true);
                 triggerAlert('success', 'Connection created successfully!');
             } else {
                 document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
