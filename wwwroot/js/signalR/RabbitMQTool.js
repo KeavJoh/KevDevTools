@@ -1,4 +1,4 @@
-﻿import { triggerAlert } from '../AlertService.js';
+﻿import { triggerAlert } from '../Services/AlertService.js';
 
 document.getElementById('rabbitConnectionForm').addEventListener('submit', createRabbitConnectionOnServer);
 document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitConnectionFromServer);
