@@ -73,6 +73,7 @@ function deleteRabbitConnectionFromServer(event) {
                     document.getElementById(id).removeAttribute("disabled");
                 });
                 switchReceivingSettings();
+                document.getElementById('messageList').innerHTML = "";
                 triggerAlert('success', 'Connection deleted successfully!');
             } else {
                 triggerAlert('error', 'Connection deletion failed!');
