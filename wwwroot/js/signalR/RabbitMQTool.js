@@ -1,4 +1,10 @@
-﻿//create connection
+﻿import { triggerAlert } from '../AlertService.js';
+
+document.getElementById('rabbitConnectionForm').addEventListener('submit', createRabbitConnectionOnServer);
+document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitConnectionFromServer);
+document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
+
+//create connection
 var connectionViewCount = new signalR.HubConnectionBuilder().withUrl("/hubs/rabbitMQToolHub").build();
 
 var elementsToDisable = [
@@ -19,14 +25,6 @@ connectionViewCount.on("receiveMessage", (value) => {
         '</div>';
     console.log('Message received:', value);
 })
-
-function receiveMessage(message) {
-    document.getElementById('messageList').innerHTML +=
-        '<div class="form-outline" data-mdb-input-init>' +
-        '<input type="text" class="form-control" value="Testtext" disabled />' +
-        '</div>';
-    console.log('Message received:', message);
-}
 
 //invoke hub methods aka send notification to hub
 function sendMessage(event) {
@@ -124,20 +122,3 @@ function rejected() {
 }
 
 connectionViewCount.start().then(fulfilled, rejected);
-
-document.getElementById('rabbitConnectionForm').addEventListener('submit', createRabbitConnectionOnServer);
-document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitConnectionFromServer);
-document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
-
-function triggerAlert(alertCase, message) {
-    switch (alertCase) {
-        case 'success':
-            document.getElementById('alert-success').innerText = message;
-            mdb.Alert.getInstance(document.getElementById('alert-success')).show();
-            break;
-        case 'danger':
-            document.getElementById('alert-danger').innerText = message;
-            mdb.Alert.getInstance(document.getElementById('alert-danger')).show();
-            break;
-    }
-}
