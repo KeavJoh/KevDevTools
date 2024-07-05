@@ -56,7 +56,6 @@ function deleteRabbitConnectionFromServer(event) {
 
     elementsToDisable.forEach(function (id) {
         document.getElementById(id).removeAttribute("disabled");
-        document.getElementById(id).value = "";
     });
 
     document.getElementById('btnConnect').removeAttribute("hidden");
@@ -101,16 +100,17 @@ function createRabbitConnectionOnServer(event) {
                 document.getElementById('btnConnect').setAttribute("hidden", true);
                 document.getElementById('btnDisconnect').removeAttribute("hidden");
                 document.getElementById('receiveAndSendingSection').removeAttribute("hidden");
+                triggerAlert('success', 'Connection created successfully!');
             } else {
                 document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
                 document.getElementById('bannerRabbitMQConnected').setAttribute("hidden", true);
-                document.getElementById('bannerRabbitMQDisconnected').innerText = "Connection failed";
+                triggerAlert('danger', 'Connection failure! Please check parameters!');
             }
         })
         .catch(function (error) {
             document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
             document.getElementById('bannerRabbitMQConnected').setAttribute("hidden", true);
-            document.getElementById('bannerRabbitMQDisconnected').innerText = error;
+            triggerAlert('danger', error);
         });
 }
 
@@ -128,3 +128,16 @@ connectionViewCount.start().then(fulfilled, rejected);
 document.getElementById('rabbitConnectionForm').addEventListener('submit', createRabbitConnectionOnServer);
 document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitConnectionFromServer);
 document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
+
+function triggerAlert(alertCase, message) {
+    switch (alertCase) {
+        case 'success':
+            document.getElementById('alert-success').innerText = message;
+            mdb.Alert.getInstance(document.getElementById('alert-success')).show();
+            break;
+        case 'danger':
+            document.getElementById('alert-danger').innerText = message;
+            mdb.Alert.getInstance(document.getElementById('alert-danger')).show();
+            break;
+    }
+}
