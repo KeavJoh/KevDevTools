@@ -50,15 +50,24 @@ namespace KevDevTools.Hubs
             return Task.FromResult(connectionObj);
         }
 
-        public Task DeleteRabbitConnection()
+        public Task<bool> DeleteRabbitConnection()
         {
             var connectionId = Context.ConnectionId;
-            if (RabbitMQConnectionDictionary.rabbitConnectionIds.TryGetValue(connectionId, out string value))
+            try
             {
-                _rabbitMQService.Dispose(value);
-                RabbitMQConnectionDictionary.rabbitConnectionIds.Remove(connectionId);
+                if (RabbitMQConnectionDictionary.rabbitConnectionIds.TryGetValue(connectionId, out string value))
+                {
+                    _rabbitMQService.Dispose(value);
+                    RabbitMQConnectionDictionary.rabbitConnectionIds.Remove(connectionId);
+                    return Task.FromResult(true);
+                } else
+                {
+                    return Task.FromResult(true);
+                }
+            } catch
+            {
+                return Task.FromResult(false);
             }
-            return Task.CompletedTask;
         }
 
 

@@ -5,16 +5,16 @@ document.getElementById('btnDisconnect').addEventListener('click', deleteRabbitC
 document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
 
 //create connection
-var connectionViewCount = new signalR.HubConnectionBuilder().withUrl("/hubs/rabbitMQToolHub").build();
+var connectionRabbitMQService = new signalR.HubConnectionBuilder().withUrl("/hubs/rabbitMQToolHub").build();
 
-var elementsToDisable = [
+var formularElemets = [
     'HostName', 'UserName', 'Password',
     'VirtualHost', 'Port', 'QueueName',
     'Durable', 'Exclusive', 'AutoDelete'
 ];
 
 //connect to methods that hub invokes aka receive notifications from hub
-connectionViewCount.on("receiveMessage", (value) => {
+connectionRabbitMQService.on("receiveMessage", (value) => {
     document.getElementById('messageList').innerHTML +=
         '<div class="row mt-4 justify-content-center">' +
         '<div class="col-6 d-flex justify-content-center">' +
@@ -23,7 +23,6 @@ connectionViewCount.on("receiveMessage", (value) => {
         '</div>' +
         '</div>' +
         '</div>';
-    console.log('Message received:', value);
 })
 
 //invoke hub methods aka send notification to hub
@@ -32,32 +31,36 @@ function sendMessage(event) {
 
     var message = document.getElementById('messageToSend').value;
     var queueName = document.getElementById('QueueName').value;
-    connectionViewCount.invoke("SendMessageWithRabbitMQ", message, queueName).then(function (response) {
+    connectionRabbitMQService.invoke("SendMessageWithRabbitMQ", message, queueName).then(function (response) {
         if (response) {
-            console.log('Message sent:', message);
+            triggerAlert('success', 'Message sent successfully!');
         } else {
-            console.log('Message not sent:', message);
+            triggerAlert('error', 'Message sending failed!');
         };
     });
 }
 
 function deleteRabbitConnectionFromServer(event) {
     event.preventDefault();
+    const result = false;
+    connectionRabbitMQService.invoke("DeleteRabbitConnection")
+        .then(function (response) {
+            if (response) {
+                document.getElementById('connectionId').value = "";
+                document.getElementById('bannerRabbitMQConnected').setAttribute("hidden", true);
+                document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
+                document.getElementById('receiveAndSendingSection').setAttribute("hidden", true);
+                document.getElementById('btnConnect').removeAttribute("hidden");
+                document.getElementById('btnDisconnect').setAttribute("hidden", true);
 
-    connectionViewCount.send("DeleteRabbitConnection");
-
-    document.getElementById('connectionId').value = "";
-
-    document.getElementById('bannerRabbitMQConnected').setAttribute("hidden", true);
-    document.getElementById('bannerRabbitMQDisconnected').removeAttribute("hidden");
-    document.getElementById('receiveAndSendingSection').setAttribute("hidden", true);
-
-    elementsToDisable.forEach(function (id) {
-        document.getElementById(id).removeAttribute("disabled");
-    });
-
-    document.getElementById('btnConnect').removeAttribute("hidden");
-    document.getElementById('btnDisconnect').setAttribute("hidden", true);
+                formularElemets.forEach(function (id) {
+                    document.getElementById(id).removeAttribute("disabled");
+                });
+                triggerAlert('success', 'Connection deleted successfully!');
+            } else {
+                triggerAlert('error', 'Connection deletion failed!');
+            }
+        });
 }
 
 function createRabbitConnectionOnServer(event) {
@@ -83,7 +86,7 @@ function createRabbitConnectionOnServer(event) {
 
     console.log('Sending connection data:', connectionData); // Log data being sent
 
-    connectionViewCount.invoke("CreateRabbitConnection", connectionData)
+    connectionRabbitMQService.invoke("CreateRabbitConnection", connectionData)
         .then(function (response) {
             console.log('ConnectionId:', response.connectionId);
             console.log('ConnectionStatus:', response.connected);
@@ -92,7 +95,7 @@ function createRabbitConnectionOnServer(event) {
                 document.getElementById('connectionId').value = response.connectionId;
                 document.getElementById('bannerRabbitMQConnected').removeAttribute("hidden");
                 document.getElementById('bannerRabbitMQDisconnected').setAttribute("hidden", true);
-                elementsToDisable.forEach(function (id) {
+                formularElemets.forEach(function (id) {
                     document.getElementById(id).setAttribute("disabled", true);
                 });
                 document.getElementById('btnConnect').setAttribute("hidden", true);
@@ -121,4 +124,4 @@ function rejected() {
     //do something on error
 }
 
-connectionViewCount.start().then(fulfilled, rejected);
+connectionRabbitMQService.start().then(fulfilled, rejected);
