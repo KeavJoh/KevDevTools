@@ -9,8 +9,8 @@ var connectionRabbitMQService = new signalR.HubConnectionBuilder().withUrl("/hub
 
 var formularElemets = [
     'HostName', 'UserName', 'Password',
-    'VirtualHost', 'Port', 'QueueName',
-    'Durable', 'Exclusive', 'AutoDelete'
+    'VirtualHost', 'Port', 'SendingQueueName',
+    'Durable', 'Exclusive', 'AutoDelete', "ReceivingQueueName"
 ];
 
 //connect to methods that hub invokes aka receive notifications from hub
@@ -30,8 +30,8 @@ function sendMessage(event) {
     event.preventDefault();
 
     var message = document.getElementById('messageToSend').value;
-    var queueName = document.getElementById('QueueName').value;
-    connectionRabbitMQService.invoke("SendMessageWithRabbitMQ", message, queueName).then(function (response) {
+    var sendingQueueName = document.getElementById('SendingQueueName').value;
+    connectionRabbitMQService.invoke("SendMessageWithRabbitMQ", message, sendingQueueName).then(function (response) {
         if (response) {
             triggerAlert('success', 'Message sent successfully!');
         } else {
@@ -75,7 +75,8 @@ function createRabbitConnectionOnServer(event) {
         Password: formData.get('Password'),
         VirtualHost: formData.get('VirtualHost'),
         Port: parseInt(formData.get('Port')),
-        QueueName: formData.get('QueueName'),
+        SendingQueueName: formData.get('SendingQueueName'),
+        ReceivingQueueName: formData.get('ReceivingQueueName'),
         Durable: formData.get('Durable') === "1",
         Exclusive: formData.get('Exclusive') === "1",
         AutoDelete: formData.get('AutoDelete') === "1",

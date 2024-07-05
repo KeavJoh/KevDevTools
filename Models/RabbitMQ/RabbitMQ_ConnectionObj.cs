@@ -7,7 +7,8 @@
         public string Password { get; set; }
         public string VirtualHost { get; set; }
         public int Port { get; set; }
-        public string QueueName { get; set; }
+        public string SendingQueueName { get; set; }
+        public string ReceivingQueueName { get; set; }
         public bool Durable { get; set; }
         public bool Exclusive { get; set; }
         public bool AutoDelete { get; set; }

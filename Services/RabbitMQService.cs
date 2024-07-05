@@ -48,7 +48,7 @@ namespace KevDevTools.Services
                 var connection = factory.CreateConnection();
                 var channel = connection.CreateModel();
 
-                channel.QueueDeclare(queue: rabbitObj.QueueName,
+                channel.QueueDeclare(queue: rabbitObj.SendingQueueName,
                     durable: rabbitObj.Durable,
                     exclusive: rabbitObj.Exclusive,
                     autoDelete: rabbitObj.AutoDelete);
@@ -56,7 +56,12 @@ namespace KevDevTools.Services
                 _connections[rabbitObj.SessionId] = connection;
                 _channels[rabbitObj.SessionId] = channel;
 
-                Task.Run(() => ReceiveMessages(channel, rabbitObj.SessionId, rabbitObj.QueueName, rabbitObj.ConnectionId));
+                if(rabbitObj.ReceivingQueueName == string.Empty || rabbitObj.ReceivingQueueName == null) {
+                    Task.Run(() => ReceiveMessages(channel, rabbitObj.SessionId, rabbitObj.SendingQueueName, rabbitObj.ConnectionId));
+                } else
+                {
+                    Task.Run(() => ReceiveMessages(channel, rabbitObj.SessionId, rabbitObj.ReceivingQueueName, rabbitObj.ConnectionId));
+                }
 
                 rabbitObj.Connected = true;
 
